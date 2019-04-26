@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1,
+			shrink-to-fit=no"
+			/>
+		<meta name="description" content="" />
+		<meta name="author" content="" />
+
+		<title>Cancer Detection</title>
+
+		<link
+			rel="canonical"
+			href="https://getbootstrap.com/docs/4.0/examples/album/"
+			/>
+
+		<!-- Bootstrap core CSS -->
+		<link
+			rel="stylesheet"
+			href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+			integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+			crossorigin="anonymous"
+			/>
+
+		<!-- Custom styles for this template -->
+		<link href="css/style.css" rel="stylesheet" />
+	</head>
+
+	<body>
+		<header>
+			<div class="collapse bg-dark" id="navbarHeader">
+				<div class="container">
+					<div class="row">
+						<div class="col-sm-8 col-md-7 py-4">
+							<h4 class="text-white">About</h4>
+							<p class="text-muted">
+								Add some information about the album below, the author, or any
+								other background context. Make it a few sentences long so folks
+								can pick up some informative tidbits. Then, link them off to
+								some social networking sites or contact information.
+							</p>
+						</div>
+						<div class="col-sm-4 offset-md-1 py-4">
+
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="navbar navbar-dark bg-dark box-shadow">
+				<div class="container d-flex justify-content-between">
+					<a href="#" class="navbar-brand d-flex align-items-center">
+						<strong>Cancer Analyser</strong>
+					</a>
+					<button
+						class="navbar-toggler"
+						type="button"
+						data-toggle="collapse"
+						data-target="#navbarHeader"
+						aria-controls="navbarHeader"
+						aria-expanded="false"
+						aria-label="Toggle navigation">
+						<span class="navbar-toggler-icon"></span>
+					</button>
+				</div>
+			</div>
+		</header>
+
+		<main role="main">
+			<section class="jumbotron text-center">
+				<div class="container">
+					<h1 class="jumbotron-heading">Breast Cancer Detection</h1>
+					<p class="lead text-muted">
+						Something short and leading about the collection below—its contents,
+						the creator, etc. Make it short and sweet, but not too short so
+						folks don't simply skip over it entirely.
+					</p>
+					<p>
+						<!-- <a href="#part2" class="btn btn-primary my-2">Upload Images</a> -->
+					</p>
+				</div>
+			</section>
+
+			<div class="album py-5 bg-light" id="part2">
+				<div class="container">
+					<div class="row">
+						<div class="col-md-4 offset-md-4">
+							<div class="card mb-4 box-shadow">
+								<!-- <img
+									class="card-img-top"
+									data-src="holder.js/100px225?theme=thumb&bg=55595c&fg=eceeef&text=Thumbnail"
+									alt="Card image cap"
+									/> -->
+								<div class="card-body">
+									<div
+										class="d-flex justify-content-between
+										align-items-center">
+										<form method="GET">
+											<div class="form-group">
+												<label for="exampleFormControlFile1">Upload your picture</label>
+												<input
+													type="file"
+													class="form-control-file"
+													id="exampleFormControlFile1"
+													/>
+												<button
+													style="text-align: center;
+													width:100%;"
+													class="btn btn-success mt-5
+													mx-auto"
+													id="picUpload">
+													Upload
+												</button>
+											</div>
+										</form>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</main>
+
+		<footer class="text-muted">
+			<div class="container">
+				<p class="float-right">
+					<a href="#">Back to top</a>
+				</p>
+				<p>
+					This project is done by Group #9, S8 students of AEI, MESCE
+				</p>
+			</div>
+		</footer>
+
+		<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+		<script
+			src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+			integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+			crossorigin="anonymous"></script>
+		<script
+			src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+			integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+			crossorigin="anonymous"></script>
+		<script
+			src="https://cdnjs.cloudflare.com/ajax/libs/holder/2.9.6/holder.min.js"></script>
+		<script>
+		$(document).ready(function(){
+			$('form').on('submit', function(e){
+				e.preventDefault();
+				console.log("Request Submitted..");
+				$.ajax({
+					type: "POST",
+					url: "watson.cgi",
+					data: { imageName: "dataset" },
+					beforeSend: function(){
+						console.log("Sending the data through API..")
+					},
+					success: function(response){
+						console.log(response);
+					},
+					error: function(){
+						console.log("Some error Occured!");
+					}
+				});
+			});
+		});
+
+		function callbackFunc(response) {
+			// do something with the response
+			obj = JSON.parse(response)
+			console.log(obj.images[0].image);
+
+		}
+
+		// postData('fruitbowl');
+		</script>
+	</body>
+</html>
