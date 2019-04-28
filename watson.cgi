@@ -10,8 +10,8 @@ fs = cgi.FieldStorage()
 for k in fs.keys():
     picName = fs.getvalue(k)
 
-# Pathname -- Need extension or not?
-path = 'images/'+picName+'.jpg'
+# Pathname
+path = 'images/'+picName
 print('Content-type: text/html\r\n\r')
 
 visual_recognition = VisualRecognitionV3(

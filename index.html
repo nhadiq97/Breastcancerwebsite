@@ -87,7 +87,7 @@
 				<div class="container">
 					<div class="row">
 						<div class="col-md-4 offset-md-4">
-							<div class="card mb-4 box-shadow">
+							<div class="card my-4 box-shadow">
 								<!-- <img
 									class="card-img-top"
 									data-src="holder.js/100px225?theme=thumb&bg=55595c&fg=eceeef&text=Thumbnail"
@@ -97,13 +97,13 @@
 									<div
 										class="d-flex justify-content-between
 										align-items-center">
-										<form method="GET">
+										<form method="post" enctype="multipart/form-data">
 											<div class="form-group">
-												<label for="exampleFormControlFile1">Upload your picture</label>
+												<label for="fileToUpload">Upload your picture</label>
 												<input
 													type="file"
 													class="form-control-file"
-													id="exampleFormControlFile1"
+													id="fileToUpload" name="fileToUpload"
 													/>
 												<button
 													style="text-align: center;
@@ -122,6 +122,50 @@
 					</div>
 				</div>
 			</div>
+			<div class="container py-5" id="loadScreen" style="display: none;">
+				<div class="row">
+					<div class="col-md-12 my-5" style="text-align:center;">
+						<div class="spinner"></div>
+					</div>
+				</div>
+			</div>
+			<div class="container" style="display: none;" id="part3">
+				<div class="row pt-5">
+					<div class="col-md-6">
+						<img
+							src=""
+							style="max-width:100%;"
+							id="thumbnail">
+					</div>
+					<div class="col-md-6">
+						<table class="table">
+							<thead style="text-align:center;">
+								<tr>
+									<th scope="col" colspan="2">Result</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>Image Name</th>
+									<td id="imageName">-</td>
+								</tr>
+								<tr>
+									<td>Class</th>
+									<td id="className">-</td>
+								</tr>
+								<tr>
+									<td>Score</th>
+									<td id="imageScore">-</td>
+								</tr>
+								<tr>
+									<td>Classifier ID</th>
+									<td id="classifierId">-</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
 		</main>
 
 		<footer class="text-muted">
@@ -130,7 +174,7 @@
 					<a href="#">Back to top</a>
 				</p>
 				<p>
-					This project is done by Group #9, S8 students of AEI, MESCE
+					This project is done by Group #1, S8 AEI, MESCE
 				</p>
 			</div>
 		</footer>
@@ -144,36 +188,66 @@
 			src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
 			integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
 			crossorigin="anonymous"></script>
-		<script
-			src="https://cdnjs.cloudflare.com/ajax/libs/holder/2.9.6/holder.min.js"></script>
 		<script>
 		$(document).ready(function(){
 			$('form').on('submit', function(e){
 				e.preventDefault();
 				console.log("Request Submitted..");
+				// Upload File
 				$.ajax({
 					type: "POST",
-					url: "watson.cgi",
-					data: { imageName: "dataset" },
+					url: "upload.php",
+					data:  new FormData(this),
+					contentType: false,
+					cache: false,
+					processData:false,
 					beforeSend: function(){
-						console.log("Sending the data through API..")
+						$('#loadScreen').show();
 					},
-					success: function(response){
-						console.log(response);
+					success: function(data){
+						//console.log(data);
+						var response = JSON.parse(data);
+						console.log(response.status);
+						if(response.statusCode){
+							sendData(response.fileName);
+						}
 					},
 					error: function(){
-						console.log("Some error Occured!");
-					}
+						$('#loadScreen').hide();
+						console.log("Upload Failed");
+					} 	        
 				});
+				function sendData(fileName){
+					$.ajax({
+						type: "POST",
+						url: "watson.cgi",
+						data: { imageName: fileName },
+						beforeSend: function(){
+							console.log("Sending the data through API..")
+						},
+						success: function(response){
+							obj = JSON.parse(response);
+							// console.log(obj.images[0].image);
+							// console.log(response);
+
+							// Print data to screeen
+							$('#loadScreen').hide();
+							$('#part3').show();
+							$('#imageName').text(obj.images[0].image);
+							$("#className").text(obj.images[0].classifiers[0].classes[0].class);
+							$("#imageScore").text(obj.images[0].classifiers[0].classes[0].score);
+							$("#classifierId").text(obj.images[0].classifiers[0].classifier_id);
+							$("#thumbnail").attr("src", "images/"+obj.images[0].image);
+							console.log("API response recorded.")
+						},
+						error: function(){
+							$('#loadScreen').hide();
+							console.log("Some error Occured!");
+						}
+					});
+				}
 			});
 		});
-
-		function callbackFunc(response) {
-			// do something with the response
-			obj = JSON.parse(response)
-			console.log(obj.images[0].image);
-
-		}
 
 		// postData('fruitbowl');
 		</script>

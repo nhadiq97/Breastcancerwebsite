@@ -39,3 +39,27 @@ footer p {
 .box-shadow {
 	box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.05);
 }
+
+/* Loader */
+@keyframes spinner {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+.spinner:before {
+	content: "";
+	box-sizing: border-box;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 20px;
+	height: 20px;
+	margin-top: -10px;
+	margin-left: -10px;
+	border-radius: 50%;
+	border: 2px solid transparent;
+	border-top-color: #07d;
+	border-bottom-color: #07d;
+	animation: spinner 0.8s ease infinite;
+}
