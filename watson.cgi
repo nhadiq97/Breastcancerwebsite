@@ -1,4 +1,3 @@
-#!/usr/bin/python
 from watson_developer_cloud import VisualRecognitionV3
 import json
 import sys
